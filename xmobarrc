@@ -17,6 +17,11 @@ Config {
   bgColor = "black",
   fgColor = "grey",
 
+  -- This fixes a bug where xmobar doesn't appear on xmonad recompile
+  -- when nautilus is running:
+  -- http://comments.gmane.org/gmane.comp.lang.haskell.xmonad/12402
+  lowerOnStart = False
+
   -- Position is top left, taking up 95% of screen.
   -- You are likely to have to tweak the width here based on the width
   -- of your screen to make it play nicely with stalonetray, which we
