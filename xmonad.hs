@@ -28,6 +28,7 @@ import XMonad.Util.EZConfig
 import XMonad.Util.Run
 import XMonad.Hooks.DynamicLog
 import XMonad.Actions.Plane
+import XMonad.Actions.GridSelect
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.UrgencyHook
 import qualified XMonad.StackSet as W
@@ -44,7 +45,8 @@ myFocusedBorderColor = "#ff0000"      -- color of focused border
 myNormalBorderColor  = "#cccccc"      -- color of inactive border
 myBorderWidth        = 1              -- width of border around windows
 myTerminal           = "terminator"   -- which terminal software to use
-myIMRosterTitle      = "Contact List" -- title of roster on IM workspace
+myIMRosterTitle      = "buddy_list" -- title of roster on IM workspace
+--myIMRosterTitle      = "Contact List" -- title of roster on IM workspace
 
 
 {-
@@ -92,7 +94,7 @@ myWorkspaces =
     "0:VM",    "Extr1", "Extr2"
   ]
 
-startupWorkspace = "5:Dev"  -- which workspace do you want to be on after launch?
+startupWorkspace = "1:Term"  -- which workspace do you want to be on after launch?
 
 {-
   Layout configuration. In this section we identify which xmonad
@@ -113,17 +115,19 @@ startupWorkspace = "5:Dev"  -- which workspace do you want to be on after launch
 -- appear if there is more than one visible window.
 -- "avoidStruts" modifier makes it so that the layout provides
 -- space for the status bar at the top of the screen.
+myRT = ResizableTall 1 (3/100) (1/2)
 defaultLayouts = smartBorders(avoidStruts(
+  -- Mirrored variation of ResizableTall. In this layout, the large
+  -- master window is at the top, and remaining windows tile at the
+  -- bottom of the screen. Can be resized as described above.
+  Mirror (myRT [])
+  --
   -- ResizableTall layout has a large master window on the left,
   -- and remaining windows tile on the right. By default each area
   -- takes up half the screen, but you can resize using "super-h" and
   -- "super-l".
-  ResizableTall 1 (3/100) (1/2) []
+  ||| myRT []
 
-  -- Mirrored variation of ResizableTall. In this layout, the large
-  -- master window is at the top, and remaining windows tile at the
-  -- bottom of the screen. Can be resized as described above.
-  ||| Mirror (ResizableTall 1 (3/100) (1/2) [])
 
   -- Full layout makes every window full screen. When you toggle the
   -- active window, it will bring the active window to the front.
@@ -155,7 +159,8 @@ defaultLayouts = smartBorders(avoidStruts(
 -- identified using the myIMRosterTitle variable, and by default is
 -- configured for Empathy, so if you're using something else you
 -- will want to modify that variable.
-chatLayout = avoidStruts(withIM (1%7) (Title myIMRosterTitle) Grid)
+-- chatLayout = avoidStruts(withIM (4/15) (Title myIMRosterTitle) (Grid ||| myRT []))
+chatLayout = avoidStruts(withIM (4/15) (ClassName "Pidgin" `And` Role "buddy_list") (Grid ||| myRT []))
 
 -- The GIMP layout uses the ThreeColMid layout. The traditional GIMP
 -- floating panels approach is a bit of a challenge to handle with xmonad;
@@ -169,7 +174,7 @@ gimpLayout = smartBorders(avoidStruts(ThreeColMid 1 (3/100) (3/4)))
 -- layouts.
 myLayouts =
   onWorkspace "7:Chat" chatLayout
-  $ onWorkspace "9:Pix" gimpLayout
+  -- $ onWorkspace "9:Pix" gimpLayout
   $ defaultLayouts
 
 
@@ -204,9 +209,10 @@ myKeyBindings =
     , ((myModMask, xK_z), sendMessage MirrorExpand)
     , ((myModMask, xK_p), spawn "synapse")
     , ((myModMask, xK_u), focusUrgent)
-    , ((0, 0x1008FF12), spawn "amixer -q set Master toggle")
-    , ((0, 0x1008FF11), spawn "amixer -q set Master 10%-")
-    , ((0, 0x1008FF13), spawn "amixer -q set Master 10%+")
+    , ((myModMask, xK_F1), spawn "amixer -q set Master toggle; amixer -q set Headphone unmute; amixer -q set Speaker unmute; amixer -q set PCM unmute")
+    , ((myModMask, xK_F11), spawn "amixer -q set Master 2%-")
+    , ((myModMask, xK_F12), spawn "amixer -q set Master 2%+")
+    , ((myModMask, xK_g), goToSelected defaultGSConfig)
   ]
 
 
@@ -319,7 +325,7 @@ myKeys = myKeyBindings ++
   [
     ((m .|. myModMask, key), screenWorkspace sc
       >>= flip whenJust (windows . f))
-      | (key, sc) <- zip [xK_w, xK_e, xK_r] [1,0,2]
+      | (key, sc) <- zip [xK_w, xK_e, xK_r] [0,1,2]
       , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
   ]
 
