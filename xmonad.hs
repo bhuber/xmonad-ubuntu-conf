@@ -45,8 +45,7 @@ myFocusedBorderColor = "#ff0000"      -- color of focused border
 myNormalBorderColor  = "#cccccc"      -- color of inactive border
 myBorderWidth        = 1              -- width of border around windows
 myTerminal           = "terminator"   -- which terminal software to use
-myIMRosterTitle      = "buddy_list" -- title of roster on IM workspace
---myIMRosterTitle      = "Contact List" -- title of roster on IM workspace
+myIMRosterTitle      = "Contact List" -- title of roster on IM workspace
 
 
 {-
@@ -143,11 +142,12 @@ defaultLayouts = smartBorders(avoidStruts(
   -- the available space. Remaining windows tile to both the left and
   -- right of the master window. You can resize using "super-h" and
   -- "super-l".
-  ||| ThreeColMid 1 (3/100) (3/4)
+  -- ||| ThreeColMid 1 (3/100) (3/4)
 
   -- Circle layout places the master window in the center of the screen.
   -- Remaining windows appear in a circle around it
-  ||| Circle))
+  -- ||| Circle
+  ))
 
 
 -- Here we define some layouts which will be assigned to specific
@@ -159,8 +159,7 @@ defaultLayouts = smartBorders(avoidStruts(
 -- identified using the myIMRosterTitle variable, and by default is
 -- configured for Empathy, so if you're using something else you
 -- will want to modify that variable.
--- chatLayout = avoidStruts(withIM (4/15) (Title myIMRosterTitle) (Grid ||| myRT []))
-chatLayout = avoidStruts(withIM (4/15) (ClassName "Pidgin" `And` Role "buddy_list") (Grid ||| myRT []))
+chatLayout = avoidStruts(withIM (4/15) (Title myIMRosterTitle) (Grid ||| myRT []))
 
 -- The GIMP layout uses the ThreeColMid layout. The traditional GIMP
 -- floating panels approach is a bit of a challenge to handle with xmonad;
@@ -268,7 +267,7 @@ myManagementHooks = [
   , (className =? "Komodo IDE" <&&> resource =? "Komodo_find2") --> doFloat
   , (className =? "Komodo IDE" <&&> resource =? "Komodo_gotofile") --> doFloat
   , (className =? "Komodo IDE" <&&> resource =? "Toplevel") --> doFloat
-  , (className =? "Empathy") --> doF (W.shift "7:Chat")
+  --, (className =? "Empathy") --> doF (W.shift "7:Chat")
   , (className =? "Pidgin") --> doF (W.shift "7:Chat")
   , (className =? "Gimp-2.8") --> doF (W.shift "9:Pix")
   ]
