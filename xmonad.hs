@@ -87,13 +87,13 @@ myUrgentWSRight = "}"
 
 myWorkspaces =
   [
-    "7:Chat",  "8:Dbg", "9:Pix",
-    "4:Docs",  "5:Dev", "6:Web",
-    "1:Term",  "2:Hub", "3:Mail",
+    "7:Chat",  "8:Web2", "9:Music",
+    "4:Docs",  "5:Dev", "6:Web1",
+    "1:Root",  "2:Win", "3:Remote",
     "0:VM",    "Extr1", "Extr2"
   ]
 
-startupWorkspace = "1:Term"  -- which workspace do you want to be on after launch?
+startupWorkspace = "5:Dev"  -- which workspace do you want to be on after launch?
 
 {-
   Layout configuration. In this section we identify which xmonad
@@ -116,17 +116,17 @@ startupWorkspace = "1:Term"  -- which workspace do you want to be on after launc
 -- space for the status bar at the top of the screen.
 myRT = ResizableTall 1 (3/100) (1/2)
 defaultLayouts = smartBorders(avoidStruts(
-  -- Mirrored variation of ResizableTall. In this layout, the large
-  -- master window is at the top, and remaining windows tile at the
-  -- bottom of the screen. Can be resized as described above.
-  Mirror (myRT [])
   --
   -- ResizableTall layout has a large master window on the left,
   -- and remaining windows tile on the right. By default each area
   -- takes up half the screen, but you can resize using "super-h" and
   -- "super-l".
-  ||| myRT []
+  myRT []
 
+  -- Mirrored variation of ResizableTall. In this layout, the large
+  -- master window is at the top, and remaining windows tile at the
+  -- bottom of the screen. Can be resized as described above.
+  ||| Mirror (myRT [])
 
   -- Full layout makes every window full screen. When you toggle the
   -- active window, it will bring the active window to the front.
@@ -206,7 +206,7 @@ myKeyBindings =
     ((myModMask, xK_b), sendMessage ToggleStruts)
     , ((myModMask, xK_a), sendMessage MirrorShrink)
     , ((myModMask, xK_z), sendMessage MirrorExpand)
-    , ((myModMask, xK_p), spawn "synapse")
+    -- , ((myModMask, xK_p), spawn "synapse")
     , ((myModMask, xK_u), focusUrgent)
     , ((myModMask, xK_F1), spawn "amixer -q set Master toggle; amixer -q set Headphone unmute; amixer -q set Speaker unmute; amixer -q set PCM unmute")
     , ((myModMask, xK_F11), spawn "amixer -q set Master 2%-")
@@ -309,6 +309,7 @@ numKeys =
 -- that we are telling xmonad how to navigate workspaces,
 -- how to send windows to different workspaces,
 -- and what keys to use to change which monitor is focused.
+-- myKeys = myKeyBindings
 myKeys = myKeyBindings ++
   [
     ((m .|. myModMask, k), windows $ f i)
