@@ -97,6 +97,14 @@ stalonetray \
 # certificates and the like.
 gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh
 
+# Setup gnome-keyring
+# http://blog.san-ss.com.ar/2011/03/using-gnome-keyring-in-xmonad.html
+eval $(gnome-keyring-daemon --start)
+export GNOME_KEYRING_CONTROL
+export GNOME_KEYRING_PID
+export SSH_AUTH_SOCK="$GNOME_KEYRING_CONTROL/ssh"
+
 # Now, finally, start xmonad
 exec xmonad
+
 
