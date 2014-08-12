@@ -214,6 +214,12 @@ myKeyBindings =
     , ((myModMask, xK_g), goToSelected defaultGSConfig)
   ]
 
+myExtendedKeyBindings = 
+  [
+    -- Lock Screen
+    ("M-S-l",    spawn "gnome-screensaver-command -l")
+  ]
+
 
 {-
   Management hooks. You can use management hooks to enforce certain
@@ -364,4 +370,5 @@ main = do
         . wrap myUrgentWSLeft myUrgentWSRight
     }
   }
+    `additionalKeysP` myExtendedKeyBindings
     `additionalKeys` myKeys

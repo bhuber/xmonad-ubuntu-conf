@@ -18,7 +18,7 @@
 # Author: David Brewer
 
 echo "Installing required packages..."
-sudo apt-get install xmonad libghc-xmonad-dev libghc-xmonad-contrib-dev xmobar \
+sudo apt-get install xmonad libghc-xmonad-dev libghc-xmonad-contrib-dev xmobar xautolock \
     xcompmgr nitrogen stalonetray moreutils synapse ssh-askpass-gnome thunar terminator remmina
 
 echo "Creating xmonad xsession configuration..."
