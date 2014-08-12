@@ -209,8 +209,8 @@ myKeyBindings =
     , ((myModMask, xK_p), spawn "synapse")
     , ((myModMask, xK_u), focusUrgent)
     , ((myModMask, xK_F1), spawn "amixer -q set Master toggle; amixer -q set Headphone unmute; amixer -q set Speaker unmute; amixer -q set PCM unmute")
-    , ((myModMask, xK_F11), spawn "amixer -q set Master 2%-")
-    , ((myModMask, xK_F12), spawn "amixer -q set Master 2%+")
+    , ((myModMask, xK_F11), spawn "amixer -c 1 set Master 2%-")
+    , ((myModMask, xK_F12), spawn "amixer -c 1 set Master 2%+")
     , ((myModMask, xK_g), goToSelected defaultGSConfig)
   ]
 
