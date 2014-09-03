@@ -12,7 +12,7 @@
 
 # Identify the home of our gtkrc file, important for setting styles of 
 # gtk-based applications
-export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
+#export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
 
 # Load X resources (fixes some font issues)
 xrdb -merge .Xresources
@@ -37,7 +37,7 @@ xcompmgr -n &
 # connected screens and find out what names you should use to refer to them.
 
 # Activate primary screen 
-xrandr --output LVDS-1 --auto --primary
+#xrandr --output LVDS-1 --auto --primary
 
 # If we find that a screen is connected via VGA, activate it and position it
 # to the left of the primary screen.
@@ -58,8 +58,7 @@ nitrogen --restore &
 # See http://superuser.com/a/398979
 # Also https://github.com/vamsee/dotfiles/blob/master/xmonad/start-xmonad
 xautolock -time 10 -locker "gnome-screensaver-command -l" -notify 10 \
-      -notifier "notify-send -t 5000 -i gtk-dialog-info 'Locking in 10 seconds'"
-
+      -notifier "notify-send -t 5000 -i gtk-dialog-info 'Locking in 10 seconds'" &
 
 #
 # STARTUP ICON TRAY
@@ -100,11 +99,10 @@ stalonetray \
 # when using gnome applications which expect access to the keyring, such
 # as Empathy. This prevents prompts you may otherwise get for invalid
 # certificates and the like.
-gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh
+gnome-keyring-daemon -d --start --components=gpg,pkcs11,secrets,ssh
 
 # Setup gnome-keyring
 # http://blog.san-ss.com.ar/2011/03/using-gnome-keyring-in-xmonad.html
-eval $(gnome-keyring-daemon --start)
 export GNOME_KEYRING_CONTROL
 export GNOME_KEYRING_PID
 export SSH_AUTH_SOCK="$GNOME_KEYRING_CONTROL/ssh"
