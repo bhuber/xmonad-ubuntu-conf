@@ -87,9 +87,9 @@ myUrgentWSRight = "}"
 
 myWorkspaces =
   [
-    "7:Chat",  "8:Dbg", "9:Pix",
-    "4:Docs",  "5:Dev", "6:Web",
-    "1:Term",  "2:Hub", "3:Mail",
+    "1:Root",  "2:VM", "3:VM-Con",
+    "4:Remotes",  "5:Local-Con", "6:Misc",
+    "7:Files",  "8:Chrome", "9:Music",
     "0:VM",    "Extr1", "Extr2"
   ]
 
@@ -220,6 +220,11 @@ myExtendedKeyBindings =
     ("C-M1-l",    spawn "gnome-screensaver-command -l")
   ]
 
+myRemoveKeys =
+  [
+    (controlMask, xK_space)
+  ]
+
 
 {-
   Management hooks. You can use management hooks to enforce certain
@@ -278,61 +283,8 @@ myManagementHooks = [
   , (className =? "Gimp-2.8") --> doF (W.shift "9:Pix")
   ]
 
+myKeys = myKeyBindings
 
-{-
-  Workspace navigation keybindings. This is probably the part of the
-  configuration I have spent the most time messing with, but understand
-  the least. Be very careful if messing with this section.
--}
-
--- We define two lists of keycodes for use in the rest of the
--- keyboard configuration. The first is the list of numpad keys,
--- in the order they occur on the keyboard (left to right and
--- top to bottom). The second is the list of number keys, in an
--- order corresponding to the numpad. We will use these to
--- make workspace navigation commands work the same whether you
--- use the numpad or the top-row number keys. And, we also
--- use them to figure out where to go when the user
--- uses the arrow keys.
-numPadKeys =
-  [
-    xK_KP_Home, xK_KP_Up, xK_KP_Page_Up
-    , xK_KP_Left, xK_KP_Begin,xK_KP_Right
-    , xK_KP_End, xK_KP_Down, xK_KP_Page_Down
-    , xK_KP_Insert, xK_KP_Delete, xK_KP_Enter
-  ]
-
-numKeys =
-  [
-    xK_7, xK_8, xK_9
-    , xK_4, xK_5, xK_6
-    , xK_1, xK_2, xK_3
-    , xK_0, xK_minus, xK_equal
-  ]
-
--- Here, some magic occurs that I once grokked but has since
--- fallen out of my head. Essentially what is happening is
--- that we are telling xmonad how to navigate workspaces,
--- how to send windows to different workspaces,
--- and what keys to use to change which monitor is focused.
-myKeys = myKeyBindings ++
-  [
-    ((m .|. myModMask, k), windows $ f i)
-       | (i, k) <- zip myWorkspaces numPadKeys
-       , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
-  ] ++
-  [
-    ((m .|. myModMask, k), windows $ f i)
-       | (i, k) <- zip myWorkspaces numKeys
-       , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
-  ] ++
-  M.toList (planeKeys myModMask (Lines 4) Finite) ++
-  [
-    ((m .|. myModMask, key), screenWorkspace sc
-      >>= flip whenJust (windows . f))
-      | (key, sc) <- zip [xK_w, xK_e, xK_r] [0,1,2]
-      , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
-  ]
 
 
 {-
@@ -370,5 +322,6 @@ main = do
         . wrap myUrgentWSLeft myUrgentWSRight
     }
   }
+    `removeKeys` myRemoveKeys
     `additionalKeysP` myExtendedKeyBindings
     `additionalKeys` myKeys
