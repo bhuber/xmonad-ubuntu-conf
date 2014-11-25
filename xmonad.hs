@@ -34,6 +34,9 @@ import XMonad.Hooks.UrgencyHook
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
 import Data.Ratio ((%))
+import XMonad.Actions.PhysicalScreens
+import XMonad.Layout.Reflect
+import XMonad.Layout.MultiToggle
 
 {-
   Xmonad configuration variables. These settings control some of the
@@ -174,6 +177,8 @@ gimpLayout = smartBorders(avoidStruts(ThreeColMid 1 (3/100) (3/4)))
 myLayouts =
   onWorkspace "7:Chat" chatLayout
   -- $ onWorkspace "9:Pix" gimpLayout
+  $ mkToggle (single REFLECTX)
+  $ mkToggle (single REFLECTY)
   $ defaultLayouts
 
 
@@ -212,7 +217,17 @@ myKeyBindings =
     , ((myModMask, xK_F11), spawn "amixer -c 1 set Master 2%-")
     , ((myModMask, xK_F12), spawn "amixer -c 1 set Master 2%+")
     , ((myModMask, xK_g), goToSelected defaultGSConfig)
-  ]
+    , ((myModMask, xK_x), sendMessage $ XMonad.Layout.MultiToggle.Toggle REFLECTX)
+    , ((myModMask, xK_y), sendMessage $ XMonad.Layout.MultiToggle.Toggle REFLECTY)
+  ] ++ 
+    -- http://xmonad.org/xmonad-docs/xmonad-contrib/XMonad-Actions-PhysicalScreens.html
+    --
+    -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
+    -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
+    --
+  [((myModMask .|. mask, key), f sc)
+   | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
+   , (f, mask) <- [(viewScreen, 0), (sendToScreen, shiftMask)]]
 
 myExtendedKeyBindings = 
   [

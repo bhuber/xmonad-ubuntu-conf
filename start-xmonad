@@ -47,6 +47,7 @@ xcompmgr -n &
 # to the left of the primary screen.
 #xrandr | grep 'DP-1 connected' | ifne xrandr --output DP-1 --auto --left-of LVDS-1
 
+xrandr --output HDMI1 --auto --left-of VGA1 --rotate left
 
 #
 # LOAD SCREEN BACKGROUNDS
