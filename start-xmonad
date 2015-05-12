@@ -24,31 +24,6 @@ xrdb -merge .Xresources
 xcompmgr -n &
 
 
-#
-# SCREEN CONFIGURATION
-#
-
-# We handle our screen configuration using xrandr. You are likely to want to 
-# edit this section to match the specific demands of your setup. The below
-# setup is for a Lenovo W520 laptop that sometimes has an external monitor
-# hooked up via either VGA or DVI, positioned to the left of the laptop.
-#
-# Note that you can run xrandr at the command line to get a list of your
-# connected screens and find out what names you should use to refer to them.
-
-# Activate primary screen 
-#xrandr --output LVDS-1 --auto --primary
-
-# If we find that a screen is connected via VGA, activate it and position it
-# to the left of the primary screen.
-#xrandr | grep 'VGA-1 connected' | ifne xrandr --output VGA-1 --auto --left-of LVDS-1
-
-# If we find that a screen is connected via DVI, activate it and position it
-# to the left of the primary screen.
-#xrandr | grep 'DP-1 connected' | ifne xrandr --output DP-1 --auto --left-of LVDS-1
-
-xrandr --output VGA1 --auto --primary
-xrandr --output HDMI1 --auto --left-of VGA1 --rotate left
 
 #
 # LOAD SCREEN BACKGROUNDS
@@ -88,13 +63,15 @@ xautolock -time 10 -locker "gnome-screensaver-command -l" -notify 10 \
 #
 stalonetray \
   --icon-gravity E \
-  --geometry 5x1-0+0 \
-  --max-geometry 5x1-0+0 \
+  --geometry 8x1-0+0 \
+  --max-geometry 8x1-0+0 \
   --background '#000000' \
   --skip-taskbar \
   --icon-size 24 \
   --kludges force_icons_size \
   --window-strut none \
+  --window-type toolbar \
+  --window-layer top \
 &
 
 # Run the gnome-keyring-daemon to avoid issues you otherwise may encounter
@@ -108,6 +85,36 @@ gnome-keyring-daemon -d --start --components=gpg,pkcs11,secrets,ssh
 export GNOME_KEYRING_CONTROL
 export GNOME_KEYRING_PID
 export SSH_AUTH_SOCK="$GNOME_KEYRING_CONTROL/ssh"
+
+#
+# SCREEN CONFIGURATION
+#
+
+# We handle our screen configuration using xrandr. You are likely to want to 
+# edit this section to match the specific demands of your setup. The below
+# setup is for a Lenovo W520 laptop that sometimes has an external monitor
+# hooked up via either VGA or DVI, positioned to the left of the laptop.
+#
+# Note that you can run xrandr at the command line to get a list of your
+# connected screens and find out what names you should use to refer to them.
+
+# Activate primary screen 
+#xrandr --output LVDS-1 --auto --primary
+
+# If we find that a screen is connected via VGA, activate it and position it
+# to the left of the primary screen.
+#xrandr | grep 'VGA-1 connected' | ifne xrandr --output VGA-1 --auto --left-of LVDS-1
+
+# If we find that a screen is connected via DVI, activate it and position it
+# to the left of the primary screen.
+#xrandr | grep 'DP-1 connected' | ifne xrandr --output DP-1 --auto --left-of LVDS-1
+
+xrandr --output VGA1 --auto --primary
+xrandr --output HDMI1 --auto --left-of VGA1 --rotate left
+
+# There seems to be a race condition where screen settings don't always initialize
+# properly.  Maybe this will help.
+sleep 1
 
 # Now, finally, start xmonad
 exec xmonad
