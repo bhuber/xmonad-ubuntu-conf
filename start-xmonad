@@ -37,42 +37,6 @@ nitrogen --restore &
 xautolock -time 10 -locker "gnome-screensaver-command -l" -notify 10 \
       -notifier "notify-send -t 5000 -i gtk-dialog-info 'Locking in 10 seconds'" &
 
-#
-# STARTUP ICON TRAY
-#
-
-# We are using stalonetray to create a small icon tray at the
-# top right of the screen. You are likely to want to tweak the
-# size of the icons and the width of the tray based upon the
-# size of your screen and your xmobar configuration. The goal is
-# to make stalonetray look like it is part of xmobar.
-# 
-# Line by line, the options used by default below mean:
-# - icons should be aligned with the "East" or right side of the tray
-# - the width of the tray should be 5 icons wide by one icon tall, and it 
-#   should be located 0 pixels from the right of the screen (-0) and 0 pixels
-#   from the top of the screen (+0).
-# - By setting our maximum geometry to the same thing, the tray will not grow.
-# - The background color of the tray should be black.
-# - This program should not show up in any taskbar.
-# - Icons should be set to size "24".
-# - Kludges argument of "force_icons_size" forces all icons to really, truly 
-#   be the size we set.
-# - window-strut "none" means windows are allowed to cover the tray. In
-#   other words, trust xmonad to handle this part.
-#
-stalonetray \
-  --icon-gravity E \
-  --geometry 8x1-0+0 \
-  --max-geometry 8x1-0+0 \
-  --background '#000000' \
-  --skip-taskbar \
-  --icon-size 24 \
-  --kludges force_icons_size \
-  --window-strut none \
-  --window-type toolbar \
-  --window-layer top \
-&
 
 # Run the gnome-keyring-daemon to avoid issues you otherwise may encounter
 # when using gnome applications which expect access to the keyring, such
@@ -85,6 +49,12 @@ gnome-keyring-daemon -d --start --components=gpg,pkcs11,secrets,ssh
 export GNOME_KEYRING_CONTROL
 export GNOME_KEYRING_PID
 export SSH_AUTH_SOCK="$GNOME_KEYRING_CONTROL/ssh"
+
+# Get default apps to work properly, among other things
+# See:
+# https://bbs.archlinux.org/viewtopic.php?id=84767
+# https://bbs.archlinux.org/viewtopic.php?id=81282
+export DE=gnome
 
 #
 # SCREEN CONFIGURATION
@@ -109,14 +79,52 @@ export SSH_AUTH_SOCK="$GNOME_KEYRING_CONTROL/ssh"
 # to the left of the primary screen.
 #xrandr | grep 'DP-1 connected' | ifne xrandr --output DP-1 --auto --left-of LVDS-1
 
-xrandr --output VGA1 --auto --primary
-xrandr --output HDMI1 --auto --left-of VGA1 --rotate left
+xrandr --output DVI-D-0 --auto --primary
+xrandr --output HDMI-0 --auto --left-of DVI-D-0 --rotate right --mode 2560x1440
 
 # There seems to be a race condition where screen settings don't always initialize
 # properly.  Maybe this will help.
 sleep 1
+xrandr --output HDMI-0 --auto --left-of DVI-D-0 --rotate left --mode 2560x1440
+
+
+#
+# STARTUP ICON TRAY
+#
+
+# We are using stalonetray to create a small icon tray at the
+# top right of the screen. You are likely to want to tweak the
+# size of the icons and the width of the tray based upon the
+# size of your screen and your xmobar configuration. The goal is
+# to make stalonetray look like it is part of xmobar.
+# 
+# Line by line, the options used by default below mean:
+# - icons should be aligned with the "East" or right side of the tray
+# - the width of the tray should be 5 icons wide by one icon tall, and it 
+#   should be located 0 pixels from the right of the screen (-0) and 0 pixels
+#   from the top of the screen (+0).
+# - By setting our maximum geometry to the same thing, the tray will not grow.
+# - The background color of the tray should be black.
+# - This program should not show up in any taskbar.
+# - Icons should be set to size "24".
+# - Kludges argument of "force_icons_size" forces all icons to really, truly 
+#   be the size we set.
+# - window-strut "none" means windows are allowed to cover the tray. In
+#   other words, trust xmonad to handle this part.
+#
+
+stalonetray \
+  --icon-gravity E \
+  --geometry 10x1-0+0 \
+  --max-geometry 10x1-0+0 \
+  --background '#000000' \
+  --skip-taskbar \
+  --icon-size 26 \
+  --kludges force_icons_size \
+  --window-strut none \
+  --window-type toolbar \
+  --window-layer top \
+&
 
 # Now, finally, start xmonad
 exec xmonad
-
-
