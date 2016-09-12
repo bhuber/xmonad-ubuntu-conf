@@ -37,6 +37,7 @@ import Data.Ratio ((%))
 import XMonad.Actions.PhysicalScreens
 import XMonad.Layout.Reflect
 import XMonad.Layout.MultiToggle
+import XMonad.Layout.LayoutBuilder
 
 {-
   Xmonad configuration variables. These settings control some of the
@@ -44,7 +45,7 @@ import XMonad.Layout.MultiToggle
 -}
 
 myModMask            = mod4Mask       -- changes the mod key to "super"
-myFocusedBorderColor = "#ff0000"      -- color of focused border
+myFocusedBorderColor = "#ff0000ff"      -- color of focused border
 myNormalBorderColor  = "#cccccc"      -- color of inactive border
 myBorderWidth        = 1              -- width of border around windows
 myTerminal           = "terminator"   -- which terminal software to use
@@ -90,13 +91,13 @@ myUrgentWSRight = "}"
 
 myWorkspaces =
   [
-    "1:Root",  "2:VM", "3:VM-Con",
-    "4:Remotes",  "5:Local-Con", "6:Misc",
-    "7:Files",  "8:Chrome", "9:Music",
+    "1:Root",  "2:VM", "3:Remote-Con",
+    "4:Remotes",  "5:Local-Con", "6:Web2",
+    "7:Files",  "8:Web", "9:Music",
     "0:VM",    "Extr1", "Extr2"
   ]
 
-startupWorkspace = "1:Term"  -- which workspace do you want to be on after launch?
+startupWorkspace = "1:Root"  -- which workspace do you want to be on after launch?
 
 {-
   Layout configuration. In this section we identify which xmonad
@@ -117,6 +118,9 @@ startupWorkspace = "1:Term"  -- which workspace do you want to be on after launc
 -- appear if there is more than one visible window.
 -- "avoidStruts" modifier makes it so that the layout provides
 -- space for the status bar at the top of the screen.
+rootLayout = (layoutN 1 (relBox 0 0 1.0 0.3) Nothing Full)
+  $ (layoutN 1 (relBox 0 0.3 0.65 1.0) Nothing Full)
+  $ (layoutAll (relBox 0.65 0.3 1.0 1.0) Grid)
 myRT = ResizableTall 1 (3/100) (1/2)
 defaultLayouts = smartBorders(avoidStruts(
   -- Mirrored variation of ResizableTall. In this layout, the large
@@ -162,7 +166,7 @@ defaultLayouts = smartBorders(avoidStruts(
 -- identified using the myIMRosterTitle variable, and by default is
 -- configured for Empathy, so if you're using something else you
 -- will want to modify that variable.
-chatLayout = avoidStruts(withIM (4/15) (Title myIMRosterTitle) (Grid ||| myRT []))
+--chatLayout = avoidStruts(withIM (4/15) (Title myIMRosterTitle) (Grid ||| myRT []))
 
 -- The GIMP layout uses the ThreeColMid layout. The traditional GIMP
 -- floating panels approach is a bit of a challenge to handle with xmonad;
@@ -175,7 +179,7 @@ gimpLayout = smartBorders(avoidStruts(ThreeColMid 1 (3/100) (3/4)))
 -- Here we combine our default layouts with our specific, workspace-locked
 -- layouts.
 myLayouts =
-  onWorkspace "7:Chat" chatLayout
+  onWorkspace "1:Root" (rootLayout ||| defaultLayouts)
   -- $ onWorkspace "9:Pix" gimpLayout
   $ mkToggle (single REFLECTX)
   $ mkToggle (single REFLECTY)
@@ -289,13 +293,8 @@ myManagementHooks = [
   resource =? "synapse" --> doIgnore
   , resource =? "stalonetray" --> doIgnore
   , className =? "rdesktop" --> doFloat
-  , (className =? "Komodo IDE") --> doF (W.shift "5:Dev")
-  , (className =? "Komodo IDE" <&&> resource =? "Komodo_find2") --> doFloat
-  , (className =? "Komodo IDE" <&&> resource =? "Komodo_gotofile") --> doFloat
-  , (className =? "Komodo IDE" <&&> resource =? "Toplevel") --> doFloat
   --, (className =? "Empathy") --> doF (W.shift "7:Chat")
-  , (className =? "Pidgin") --> doF (W.shift "7:Chat")
-  , (className =? "Gimp-2.8") --> doF (W.shift "9:Pix")
+  -- , (className =? "Pidgin") --> doF (W.shift "7:Files")
   ]
 
 myKeys = myKeyBindings
