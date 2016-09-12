@@ -13,3 +13,23 @@ gtk-xft-antialias=1
 gtk-xft-hinting=1
 gtk-xft-hintstyle="hintfull"
 gtk-xft-rgba="rgb"
+
+style "imhtml-fix"
+{
+    font_name = "Monospace 10"
+}
+
+# Conversation entry box--where you type.
+widget "*pidgin_conv_entry" style "imhtml-fix"
+
+# Conversation history pane--where you read the conversation.
+widget "*pidgin_conv_imhtml" style "imhtml-fix"
+
+# Log viewer--where you read stored logs
+widget "*pidgin_log_imhtml" style "imhtml-fix"
+
+# formatting-capable entry areas (IMHtml widgets) in request dialogs
+widget "*pidgin_request_imhtml" style "imhtml-fix"
+
+# formatting-capable notification areas in dialogs (again, IMHtml widgets)
+widget "*pidgin_notify_imhtml" style "imhtml-fix"
